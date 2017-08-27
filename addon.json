@@ -1,0 +1,5 @@
+{
+	"title"		:	"Overwatch Genji: Abilities",
+	"type"		:	"weapon",
+	"ignore"	:	[".git/*", "README.md", ".gitattributes"]
+}
