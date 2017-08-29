@@ -28,7 +28,7 @@ function ENT:Think()
 end
 
 function ENT:Touch(ent)
-	if ent:GetVelocity.x > 600 or ent:GetVelocity.y > 600 or ent:GetVelocity.z > 600 then
+	if ent:GetVelocity().x > 600 or ent:GetVelocity().y > 600 or ent:GetVelocity().z > 600 then
 		ent:SetAngles(self:GetOwner():EyeAngles())
 		debugoverlay.ScreenText(0.5, 0.7, "DEFLECTED", 0.5)
 	end

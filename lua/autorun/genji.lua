@@ -1,3 +1,13 @@
+function OverwatchHero(infoTable)
+	if HEROES ~= nil then
+		HEROES[infoTable.name or "Mister X"] = infoTable
+	else
+		hook.Add("PreGamemodeLoaded", "addHero_genji", function()
+			HEROES[infoTable.name or "Mister X"] = infoTable
+		end)
+	end
+end
+
 OverwatchHero({
 	name = "Genji",
 	description = "Genji flings precise and deadly Shuriken at his targets,\nand uses his technologically-advanced katana to deflect projectiles or deliver a Swift Strike that cuts down enemies.",
@@ -29,8 +39,8 @@ OverwatchHero({
 	},
 	materials = {
 		abilities = {
-			"genji/deflect.png",
-			"genji/strike.png"
+			Material("genji/deflect.png", "noclamp smooth"),
+			Material("genji/strike.png", "noclamp smooth")
 		}
 	},
 	health = 200
