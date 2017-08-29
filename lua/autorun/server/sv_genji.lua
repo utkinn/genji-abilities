@@ -10,6 +10,7 @@ function deflect(ply)
 	timer.Simple(DEFLECT_TIME, function()
 		--ply:SetNWBool("deflecting", false)
 		deflector:Remove()
+		abilityFinished(ply, 1, true)
 	end)
 end
 
@@ -29,5 +30,6 @@ function strike(ply)
 	end)
 	timer.Simple(STRIKE_DURATION, function()
 		ply:UnLock()
+		abilityFinished(ply, 2, true)
 	end)
 end
