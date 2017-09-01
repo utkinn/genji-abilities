@@ -1,9 +1,23 @@
+function addHero(infoTable)
+	HEROES[infoTable.name or "Mister X"] = infoTable
+	table.insert(adminConVars, CreateConVar("owa_hero." .. removeSpaces(infoTable.name) .. ".adminsOnly", 0, flags, "Restrict " .. infoTable.name .. " for regular players."))
+	for _, ability in pairs(infoTable.abilities) do
+		table.insert(adminConVars, CreateConVar("owa_hero_customization." .. removeSpaces(infoTable.name) .. ".ability." .. removeSpaces(ability.name) .. ".cooldown", ability.cooldown, flags, "Change the cooldown of the " .. infoTable.name .. "'s \"" .. ability.name .. "\" ability."))
+	end
+	if infoTable.customSettings ~= nil then
+		for _, customSetting in pairs(infoTable.customSettings) do
+			table.insert(adminConVars, CreateConVar("owa_hero_customisation." .. removeSpaces(infoTable.name) .. "." .. customSetting.convar, customSetting.default, flags, customSetting.help))
+		end
+	end
+	table.insert(adminConVars, CreateConVar("owa_hero_customization." .. removeSpaces(infoTable.name) .. ".ultimate.mult", 1, flags, "The charge speed multiplier of ultimate ability \"" .. infoTable.ultimate.name .. "\"."))
+end
+
 function OverwatchHero(infoTable)
 	if HEROES ~= nil then
-		HEROES[infoTable.name or "Mister X"] = infoTable
+		addHero(infoTable)
 	else
 		hook.Add("PreGamemodeLoaded", "addHero_genji", function()
-			HEROES[infoTable.name or "Mister X"] = infoTable
+			addHero(infoTable)
 		end)
 	end
 end
