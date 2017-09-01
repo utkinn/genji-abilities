@@ -20,7 +20,8 @@ function strike(ply)
 	local TICK_DURATION = engine.TickInterval()
 	local lerpProgression = 0
 	local initPos = ply:GetPos()
-	local targetPos = ply:GetAimVector() * STRIKE_LENGTH
+	local targetPos = ply:GetPos() + Vector(0, 0, 60) + ply:GetAimVector() * STRIKE_LENGTH
+	
 	local TIMER_REPETITIONS = STRIKE_DURATION / TICK_DURATION
 
 	
@@ -52,4 +53,8 @@ hook.Add("AbilityCasted", "genji_abilityExecution", function(ply, hero, abilityI
 			strike(ply)
 		end
 	end
+end)
+
+hook.Add("Think", "debug", function()
+	debugoverlay.Sphere(player.GetAll()[1]:GetPos() + Vector(0, 0, 60) + player.GetAll()[1]:GetAimVector() * 735, 20, 0.1)
 end)
