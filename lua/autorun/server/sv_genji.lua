@@ -10,7 +10,7 @@ function deflect(ply)
 	timer.Simple(DEFLECT_DURATION, function()
 		--ply:SetNWBool("deflecting", false)
 		deflector:Remove()
-		abilityFinished(ply, 1, true)
+		abilitySucceeded(ply, 1)
 	end)
 end
 
@@ -24,10 +24,25 @@ function strike(ply)
 	
 	local TIMER_REPETITIONS = STRIKE_DURATION / TICK_DURATION
 	
+	-- local transitionTraceFilter = player.GetAll()
+	-- for _, ent in ents.GetAll()
+		-- if ent:IsNPC() then
+			-- table.insert(transitionTraceFilter, ent)
+		-- end
+	-- end
+	-- table.Add(transitionTraceFilter, ents.FindByClass("prop_dynamic")
+	
+	--Trace for Genji transition
 	local tr = util.TraceEntity({
 		start = initPos,
 		endpos = targetPos,
-		filter = player.GetAll()
+		filter = ents.GetAll()
+	}, ply)
+	
+	--Trace for hurting objects
+	local hurtTr = util.TraceEntity({
+		start = initPos,
+		endpos = targetPos
 	}, ply)
 	
 	debugoverlay.Line(initPos, tr.HitPos, 10, Color(0, 255, 0))
@@ -38,9 +53,20 @@ function strike(ply)
 		ply:SetPos(LerpVector(lerpProgression, initPos, tr.HitPos))
 		lerpProgression = lerpProgression + 1 / TIMER_REPETITIONS
 	end)
+	
+	if hurtTr.Entity ~= nil then
+		if hurtTr.Entity:IsNPC() or hurtTr.Entity:IsPlayer() then
+			local dmgInfo = DamageInfo()
+			dmgInfo:SetDamage(50)
+			dmgInfo:SetAttacker(ply)
+			dmgInfo:SetDamageType(DMG_SLASH)
+			hurtTr.Entity:TakeDamageInfo(dmgInfo)
+		end
+	end
+	
 	timer.Simple(STRIKE_DURATION, function()
 		ply:UnLock()
-		abilityFinished(ply, 2, true)
+		abilitySucceeded(ply, 2)
 	end)
 end
 
