@@ -42,8 +42,16 @@ function strike(ply)
 	--Trace for hurting objects
 	local hurtTr = util.TraceEntity({
 		start = initPos,
-		endpos = targetPos
+		endpos = targetPos,
+		filter = ply
 	}, ply)
+	
+	if DEBUG then
+		print("tr")
+		PrintTable(tr)
+		print("hurtTr")
+		PrintTable(hurtTr)
+	end
 	
 	debugoverlay.Line(initPos, tr.HitPos, 10, Color(0, 255, 0))
 	debugoverlay.Line(tr.HitPos, targetPos, 10, Color(100, 100, 100))
