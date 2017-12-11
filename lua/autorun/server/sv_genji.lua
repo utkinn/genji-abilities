@@ -1,20 +1,20 @@
-function deflect(ply)
+function Deflect(ply)
 	local DEFLECT_DURATION = 2
 
+	ply:SetNWBool("deflecting", true)
 	debugoverlay.ScreenText(0.5, 0.5, "Deflecting", DEFLECT_DURATION)
-	--ply:SetNWBool("deflecting", true)
 	local deflector = ents.Create("deflect_hitbox")
 	deflector:SetOwner(ply)
 	deflector:Spawn()
 	
 	timer.Simple(DEFLECT_DURATION, function()
-		--ply:SetNWBool("deflecting", false)
+		ply:SetNWBool("deflecting", false)
 		deflector:Remove()
-		abilitySucceeded(ply, 1)
+		AbilitySucceeded(ply, 1)
 	end)
 end
 
-function strike(ply)
+function Strike(ply)
 	local STRIKE_LENGTH = 735 --14 meters
 	local STRIKE_DURATION = 0.2
 	local TICK_DURATION = engine.TickInterval()
@@ -62,28 +62,57 @@ function strike(ply)
 		lerpProgression = lerpProgression + 1 / TIMER_REPETITIONS
 	end)
 	
-	if hurtTr.Entity ~= nil then
-		if hurtTr.Entity:IsNPC() or hurtTr.Entity:IsPlayer() then
-			local dmgInfo = DamageInfo()
-			dmgInfo:SetDamage(50)
-			dmgInfo:SetAttacker(ply)
-			dmgInfo:SetDamageType(DMG_SLASH)
-			hurtTr.Entity:TakeDamageInfo(dmgInfo)
-		end
-	end
+	local hurtEntity = hurtTr.Entity
+	
+	if hurtEntity == nil then return end
+	-- if not (hurtEntity:IsNPC() or hurtEntity:IsPlayer()) then return end
+	
+	local dmgInfo = DamageInfo()
+	dmgInfo:SetDamage(50)
+	dmgInfo:SetAttacker(ply)
+	dmgInfo:SetDamageType(DMG_SLASH)
+	hurtEntity:TakeDamageInfo(dmgInfo)
 	
 	timer.Simple(STRIKE_DURATION, function()
 		ply:UnLock()
-		abilitySucceeded(ply, 2)
+		AbilitySucceeded(ply, 2)
 	end)
 end
 
 hook.Add("AbilityCasted", "genji_abilityExecution", function(ply, hero, abilityID)
 	if hero.name == "Genji" then
 		if abilityID == 1 then
-			deflect(ply)
+			Deflect(ply)
 		elseif abilityID == 2 then
-			strike(ply)
+			Strike(ply)
 		end
 	end
+end)
+
+local function CanDeflect(target, damageInfo)
+    return target:GetNWString("hero") ~= "Genji"
+            and target:GetNWBool("deflecting")
+            and damageInfo:IsDamageType(DMG_BULLET)
+            and damageInfo:IsDamageType(DMG_AIRBOAT)
+            and damageInfo:IsDamageType(DMG_BUCKSHOT)
+            and damageInfo:IsDamageType(DMG_DISSOLVE)
+            and damageInfo:IsBulletDamage()
+end
+
+hook.Add("EntityTakeDamage", "deflectBullets", function(target, damageInfo)
+	if not target:IsPlayer() then return end
+	if not CanDeflect(target, damageInfo) then return end
+	
+	damageInfo:SetDamage(0)
+	local ammo = damageInfo:GetAmmoType()
+	local bullet = {
+		Attacker = target,
+		Damage = 20,
+		AmmoType = ammo,
+		Dir = target:GetAimVector(),
+		Src = target:GetPos() + Vector(0, 0, 40),
+		IgnoreEntity = target
+	}
+	
+	target:FireBullets(bullet)
 end)

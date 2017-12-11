@@ -3,9 +3,7 @@ include("shared.lua")
 
 function ENT:Initialize()
 	--self:PhysicsInit(SOLID_CUSTOM)
-	self:SetMoveType(MOVETYPE_NONE)
 	self:SetSolid(SOLID_CUSTOM)
-	self:PhysWake()
 
 	self:SetTrigger(true)
 	self:SetCollisionBounds(Vector(90, -45, -45), Vector(0, 45, 45))

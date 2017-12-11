@@ -24,19 +24,19 @@ end
 
 OverwatchHero({
 	name = "Genji",
-	description = "Genji flings precise and deadly Shuriken at his targets,\nand uses his technologically-advanced katana to deflect projectiles or deliver a Swift Strike that cuts down enemies.",
+	description = "Genji flings precise and deadly Shuriken at his targets,\nand uses his technologically-advanced katana to Deflect projectiles or deliver a Swift Strike that cuts down enemies.",
 	abilities = {
 		{
 			name = "Deflect",
 			description = "With lightning-quick swipes of his wakizashi, Genji reflects an oncoming projectile and sends it rebounding towards his opponent.",
 			cooldown = 8,
-			castFunction = deflect
+			castFunction = Deflect
 		},
 		{
 			name = "Swift Strike",
 			description = "Genji darts forward, slashing with his wakizashi and passing through foes in his path.\nIf Genji eliminates a target, he can instantly use this ability again.",
 			cooldown = 8,
-			castFunction = strike
+			castFunction = Strike
 		}
 	},
 	passiveAbilities = {
@@ -53,8 +53,8 @@ OverwatchHero({
 	},
 	materials = {
 		abilities = {
-			Material("genji/deflect.png", "noclamp smooth"),
-			Material("genji/strike.png", "noclamp smooth")
+			Material("genji/Deflect.png", "noclamp smooth"),
+			Material("genji/Strike.png", "noclamp smooth")
 		}
 	},
 	health = 200
