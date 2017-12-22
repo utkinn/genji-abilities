@@ -22,7 +22,7 @@ function OverwatchHero(infoTable)
 	end
 end
 
-OverwatchHero({
+OverwatchHero {
 	name = "Genji",
 	description = "Genji flings precise and deadly Shuriken at his targets,\nand uses his technologically-advanced katana to Deflect projectiles or deliver a Swift Strike that cuts down enemies.",
 	abilities = {
@@ -30,13 +30,13 @@ OverwatchHero({
 			name = "Deflect",
 			description = "With lightning-quick swipes of his wakizashi, Genji reflects an oncoming projectile and sends it rebounding towards his opponent.",
 			cooldown = 8,
-			castFunction = Deflect
+			castFunction = deflect
 		},
 		{
 			name = "Swift Strike",
 			description = "Genji darts forward, slashing with his wakizashi and passing through foes in his path.\nIf Genji eliminates a target, he can instantly use this ability again.",
 			cooldown = 8,
-			castFunction = Strike
+			castFunction = strike
 		}
 	},
 	passiveAbilities = {
@@ -48,7 +48,7 @@ OverwatchHero({
 	ultimate = {
 		name = "Dragonblade",
 		description = "Genji brandishes his katana for a brief period of time.\nUntil he sheathes his katana, Genji can deliver killing strikes to any targets within his reach.",
-		castFunction = "releaseDragonBlade",
+		castFunction = releaseDragonBlade,
 		pointsRequired = 1500
 	},
 	materials = {
@@ -58,4 +58,4 @@ OverwatchHero({
 		}
 	},
 	health = 200
-})
+}
