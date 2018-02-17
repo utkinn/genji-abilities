@@ -1,33 +1,37 @@
-AddCSLuaFile("shared.lua")
-include("shared.lua")
+AddCSLuaFile 'shared.lua'
+include 'shared.lua'
+include 'claf.lua'
 
 function ENT:Initialize()
-	--self:PhysicsInit(SOLID_CUSTOM)
-	self:SetSolid(SOLID_CUSTOM)
+    --self:PhysicsInit(SOLID_CUSTOM)
+    if SERVER then
+        self:PhysicsInit(SOLID_VPHYSICS)
+    end
 
-	self:SetTrigger(true)
-	self:SetCollisionBounds(Vector(90, -45, -45), Vector(0, 45, 45))
-	--self:SetCustomCollisionCheck(true)
-	
-	self:SetParent(self:GetOwner())
+    -- self:PhysWake()
+end
+
+function ENT:removeIfGenjiDead()
+    if not self:GetOwner():Alive() then
+        self:Remove()
+    end
+end
+
+local function updatePosition(hitbox)
+    local owner = hitbox:GetOwner()
+    local ownerPos = owner:GetPos()
+    hitbox:SetPos(ownerPos + Vector(0, 0, 46) + owner:GetAimVector() * 18)
+    hitbox:SetAngles(owner:EyeAngles())
 end
 
 function ENT:Think()
-	if not self:GetOwner():Alive() then
-		self:Remove()
-	end
-	local owner = self:GetOwner()
-	local ownerPos = owner:GetPos()
-	self:SetPos(ownerPos + Vector(0, 0, 46) + owner:GetAimVector() * 18)
-	self:SetAngles(owner:EyeAngles())
-	
-	local mins, maxs = self:GetCollisionBounds()
-	debugoverlay.BoxAngles(self:GetPos(), mins, maxs, self:GetAngles(), engine.TickInterval(), Color(200, 255, 200))
+    self:removeIfGenjiDead()
+    updatePosition(self)
 end
 
 function ENT:Touch(ent)
-	if ent:GetVelocity().x > 600 or ent:GetVelocity().y > 600 or ent:GetVelocity().z > 600 then
-		ent:SetAngles(self:GetOwner():EyeAngles())
-		debugoverlay.ScreenText(0.5, 0.7, "DEFLECTED", 0.5)
-	end
+    if Any(ent:GetVelocity(), function(coord) return coord > 600 end) then
+        ent:SetAngles(self:GetOwner():EyeAngles())    -- TODO
+        debugoverlay.ScreenText(0.5, 0.7, 'DEFLECTED', 0.5)
+    end
 end
