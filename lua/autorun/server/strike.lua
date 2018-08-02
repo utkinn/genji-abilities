@@ -48,17 +48,17 @@ function strike(ply)
 
     local hurtEntity = hurtTraceResult.Entity
 
-    if not IsValid(hurtEntity) then return end
+    if IsValid(hurtEntity) then
+        local dmgInfo = DamageInfo()
+        dmgInfo:SetDamage(50)
+        dmgInfo:SetAttacker(ply)
+        dmgInfo:SetDamageType(DMG_SLASH)
+        hurtEntity:TakeDamageInfo(dmgInfo)
+    end
     -- if not (hurtEntity:IsNPC() or hurtEntity:IsPlayer()) then return end
-
-    local dmgInfo = DamageInfo()
-    dmgInfo:SetDamage(50)
-    dmgInfo:SetAttacker(ply)
-    dmgInfo:SetDamageType(DMG_SLASH)
-    hurtEntity:TakeDamageInfo(dmgInfo)
 
     timer.Simple(STRIKE_DURATION, function()
         ply:UnLock()
-        AbilitySucceeded(ply, 2)
+        abilitySucceeded(ply, 2)
     end)
 end
